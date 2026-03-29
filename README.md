@@ -128,10 +128,6 @@ Push to the Branch (git push origin main)
 
 Open a Pull Request
 ```
-👨‍💻 Developer
-<div align="center">
-Subham Nayak
-Full Stack Developer
-</div>
+
 
 
