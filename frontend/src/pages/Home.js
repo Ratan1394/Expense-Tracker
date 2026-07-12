@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, {useEffect, useState,useCallback } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { APIUrl, handleError, handleSuccess } from '../utils';
 import { ToastContainer } from 'react-toastify';
@@ -60,27 +60,29 @@ function Home() {
         }
     }
 
-    const fetchExpenses = async () => {
-        try {
-            const url = `${APIUrl}/expenses`;
-            const headers = {
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
-            }
-            const response = await fetch(url, headers);
-            if (response.status === 403) {
-                localStorage.removeItem('token');
-                navigate('/login');
-                return
-            }
-            const result = await response.json();
-            console.log('--result', result.data);
-            setExpenses(result.data);
-        } catch (err) {
-            handleError(err);
+    const fetchExpenses = useCallback(async () => {
+    try {
+        const url = `${APIUrl}/expenses`;
+        const headers = {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        };
+
+        const response = await fetch(url, headers);
+
+        if (response.status === 403) {
+            localStorage.removeItem("token");
+            navigate("/login");
+            return;
         }
+
+        const result = await response.json();
+        setExpenses(result.data);
+    } catch (err) {
+        handleError(err);
     }
+}, [navigate]);
 
 
 
@@ -110,9 +112,11 @@ function Home() {
         }
     }
 
-    useEffect(() => {
-        fetchExpenses()
-    }, [])
+   useEffect(() => {
+    fetchExpenses();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
     return (
         <div>
